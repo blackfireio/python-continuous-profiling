@@ -1,0 +1,11 @@
+version: "3.5"
+
+services:
+  python:
+    build: ./docker
+    entrypoint: /opt/docker/entrypoint.sh
+    #command: /true
+    working_dir: /opt
+    volumes:
+      - ./:/opt
+      - /etc/passwd:/etc/passwd:ro
