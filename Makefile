@@ -1,16 +1,6 @@
 SHELL=/bin/bash -euo pipefail
 .DEFAULT_GOAL := help
 
-COMPOSE_CONFIG = -f docker-compose.yaml
-COMPOSE = docker-compose --project-name blackfire --project-directory . $(COMPOSE_CONFIG)
-
-# ifeq ($(MAKE_USE_DOCKER),true)
-# 	ON_PY=$(COMPOSE) run --rm --no-deps
-# else
-# 	ON_PY=
-# endif
-
-
 ##
 ### Tests
 ##

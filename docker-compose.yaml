@@ -4,7 +4,7 @@ services:
   python:
     build: ./docker
     entrypoint: /opt/docker/entrypoint.sh
-    #command: /true
+    command: /true
     working_dir: /opt
     volumes:
       - ./:/opt
