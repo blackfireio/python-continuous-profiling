@@ -9,8 +9,8 @@ clean:
 	rm -Rf build/ && rm -Rf dist/ && cd src/ && find . -name '*.pyc' -delete
 .PHONY: clean
 
-install: ## Runs tests suite
-	python setup.py install
+install:
+	pip install .
 .PHONY: install
 
 test: install

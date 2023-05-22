@@ -1,4 +1,6 @@
-FROM python:latest
+ARG PYTHON_VERSION
+
+FROM python:${PYTHON_VERSION}
 ENV PYTHONUNBUFFERED=1
 
 # https://github.com/tianon/gosu/blob/master/INSTALL.md

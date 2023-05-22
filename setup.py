@@ -2,7 +2,7 @@ import io
 from setuptools import setup
 
 HOMEPAGE = "https://blackfire.io"
-NAME = "blackfire-conprof"
+NAME = "blackfire_conprof"
 with io.open('VERSION', encoding='UTF-8') as f:
     VERSION = f.read()
 
@@ -11,9 +11,9 @@ setup(
     version=VERSION,
     license='MIT',
     author="Blackfire.io",
-    package_dir={'blackfire_conprof': 'src'},
+    py_modules=['blackfire_conprof'],
     author_email="support@blackfire.io",
-    install_requires=["ddtrace>=0.11.0"],
+    install_requires=["ddtrace==1.13.3"],
     description="Blackfire Continuous Profiler",
     url=HOMEPAGE,
     classifiers=[
