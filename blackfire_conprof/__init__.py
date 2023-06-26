@@ -4,7 +4,7 @@ import platform
 from ddtrace.profiling import Profiler as DDProfiler
 from blackfire_conprof import log
 
-DEFAULT_SERVICE_NAME = "n/a"
+DEFAULT_APPLICATION_NAME = "n/a"
 
 logger = log.get_logger(__name__)
 
@@ -33,7 +33,7 @@ def parse_network_address_string(agent_socket):
 
 class Profiler(object):
 
-    def __init__(self, service_name=None, agent_socket=None):
+    def __init__(self, application_name=None, agent_socket=None):
         agent_socket = agent_socket or os.environ.get(
             'BLACKFIRE_AGENT_SOCKET', _get_default_agent_socket()
         )
@@ -47,7 +47,7 @@ class Profiler(object):
             agent_socket = "http://%s" % (address)
 
         self._profiler = DDProfiler(
-            service=service_name or DEFAULT_SERVICE_NAME,
+            service=application_name or DEFAULT_APPLICATION_NAME,
             url=agent_socket,
         )
 
