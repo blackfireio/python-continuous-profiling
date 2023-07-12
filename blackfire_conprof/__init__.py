@@ -55,7 +55,6 @@ class Profiler(object):
             application_name = os.environ.get(
                 "BLACKFIRE_CONPROF_APP_NAME") or os.environ.get(
                 "PLATFORM_APPLICATION_NAME")
-            # if application_name is None, DD fills with the current running module name
 
         for label in _blackfire_labels:
             # don't override if user defined
@@ -71,6 +70,8 @@ class Profiler(object):
         labels["runtime_os"] = "my-os"
         labels["runtime_arch"] = "my-arch"
         
+        # if application_name(service) is still None here, DD fills with the 
+        # current running module name
         self._profiler = DDProfiler(
             service=application_name,
             tags=labels,
