@@ -1,6 +1,7 @@
 import re
 import os
 import platform
+import collections
 from ddtrace.profiling import Profiler as DDProfiler
 from blackfire_conprof import log
 
@@ -30,10 +31,14 @@ def parse_network_address_string(agent_socket):
     network, address = matches[0]
     return network, address
 
+_CustomLabel = collections.namedtuple("_CustomLabel", ["name", "env_var"])
+_blackfire_labels = [
+    _CustomLabel(name="project_id", env_var="PLATFORM_PROJECT"),
+]
 
 class Profiler(object):
 
-    def __init__(self, application_name=None, agent_socket=None):
+    def __init__(self, application_name=None, agent_socket=None, labels={}):
         agent_socket = agent_socket or os.environ.get(
             'BLACKFIRE_AGENT_SOCKET', _get_default_agent_socket()
         )
@@ -46,10 +51,32 @@ class Profiler(object):
         if network == "tcp":
             agent_socket = "http://%s" % (address)
 
+        if application_name is None:
+            application_name = os.environ.get(
+                "BLACKFIRE_CONPROF_APP_NAME") or os.environ.get(
+                "PLATFORM_APPLICATION_NAME")
+            # if application_name is None, DD fills with the current running module name
+
+        for label in _blackfire_labels:
+            # don't override if user defined
+            if label in labels:
+                continue
+
+            env_value = os.environ.get(label.env_var)
+            if env_value:
+                labels[label.name] = env_value
+
+        # init default labels
+        # runtime, language and runtime_version are already set by DD
+        labels["runtime_os"] = "my-os"
+        labels["runtime_arch"] = "my-arch"
+        
         self._profiler = DDProfiler(
-            service=application_name or DEFAULT_APPLICATION_NAME,
+            service=application_name,
+            tags=labels,
             url=agent_socket,
         )
+
 
     def start(self, *args, **kwargs):
         self._profiler.start(*args, **kwargs)
