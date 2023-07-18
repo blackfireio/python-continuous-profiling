@@ -69,7 +69,7 @@ class Profiler(object):
         # runtime, language and runtime_version are already set by DD
         labels["runtime_os"] = platform.system()
         labels["runtime_arch"] = platform.machine()
-        
+       
         # if application_name(service) is still None here, DD fills with the 
         # current running module name
         self._profiler = DDProfiler(
