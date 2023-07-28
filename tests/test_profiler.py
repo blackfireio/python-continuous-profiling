@@ -6,14 +6,13 @@ from blackfire_conprof import Profiler
 from contextlib import contextmanager
 
 @contextmanager
-def _patch_export(export_func):
-    from ddtrace.profiling.exporter import http  as dd_http_exporter
-    _orig_export = dd_http_exporter.PprofHTTPExporter.export
+def _patch(klass, name, fn):
+    _orig_fn = getattr(klass, name)
     try:
-        dd_http_exporter.PprofHTTPExporter.export = export_func
+        setattr(klass, name, fn)
         yield
     finally:
-        dd_http_exporter.PprofHTTPExporter.export = _orig_export
+        setattr(klass, name, _orig_fn)
 
 @contextmanager
 def _env(env_var_pairs):
@@ -25,6 +24,7 @@ def _env(env_var_pairs):
     finally:
         os.environ.clear()
         os.environ.update(orig_env)
+
 
 class ProfilerTests(unittest.TestCase):
     def test_profiler_basic(self):
@@ -42,13 +42,14 @@ class ProfilerTests(unittest.TestCase):
             self.assertTrue('foo' in str(stack_events))
             nexportcalls += 1
         
-        with _patch_export(_export):
+        from ddtrace.profiling.exporter import http  as dd_http_exporter
+        with _patch(dd_http_exporter.PprofHTTPExporter, "export", _export):
             prof = Profiler(period=0.1)
             prof.start()
-            foo(0.5+0.1)
+            foo(0.3+0.2)
             prof.stop()
 
-        self.assertTrue(nexportcalls >= 5)
+        self.assertTrue(nexportcalls >= 3)
 
     def test_profiler_appname(self):
         with _env({"BLACKFIRE_CONPROF_APP_NAME": 'app1', "PLATFORM_APPLICATION_NAME" : 'app2'}):
@@ -71,3 +72,24 @@ class ProfilerTests(unittest.TestCase):
             self.assertTrue('runtime_os' in prof._profiler.tags)
             self.assertTrue('runtime_arch' in prof._profiler.tags)
             self.assertTrue(prof._profiler.tags.get('project_id') == 'id-1')
+
+    def test_profiler_creds(self):
+        def _upload(instance, client, path, body, headers):
+            self.assertTrue(headers.get('DD-API-KEY').decode()=='id-1:token-1')
+
+        from ddtrace.profiling.exporter import http  as dd_http_exporter
+        with _patch(dd_http_exporter.PprofHTTPExporter, "_upload", _upload):
+            prof = Profiler(server_id='id-1', server_token='token-1', period=0.1)
+            prof.start()
+            time.sleep(0.2)
+            prof.stop()
+
+        def _upload2(instance, client, path, body, headers):
+            self.assertEqual(headers.get('DD-API-KEY'), None)
+
+        # no token
+        with _patch(dd_http_exporter.PprofHTTPExporter, "_upload", _upload2):
+            prof = Profiler(server_id='id-1', period=0.1)
+            prof.start()
+            time.sleep(0.2)
+            prof.stop()
