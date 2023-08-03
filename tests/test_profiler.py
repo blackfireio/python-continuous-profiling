@@ -31,16 +31,16 @@ class ProfilerTests(unittest.TestCase):
         def foo(t):
             time.sleep(t)
 
-        nexportcalls = 0
+        class _context:
+            nexportcalls = 0
         def _export(instance, events, start_time_ns, end_time_ns):
-            nonlocal nexportcalls
             from ddtrace.profiling.collector import stack_event
             
             stack_events = events.get(stack_event.StackSampleEvent, [])
 
             self.assertTrue(len(stack_events) > 0)
             self.assertTrue('foo' in str(stack_events))
-            nexportcalls += 1
+            _context.nexportcalls += 1
         
         from ddtrace.profiling.exporter import http  as dd_http_exporter
         with _patch(dd_http_exporter.PprofHTTPExporter, "export", _export):
@@ -49,7 +49,7 @@ class ProfilerTests(unittest.TestCase):
             foo(0.3+0.2)
             prof.stop()
 
-        self.assertTrue(nexportcalls >= 3)
+        self.assertTrue(_context.nexportcalls >= 3)
 
     def test_profiler_appname(self):
         with _env({"BLACKFIRE_CONPROF_APP_NAME": 'app1', "PLATFORM_APPLICATION_NAME" : 'app2'}):
