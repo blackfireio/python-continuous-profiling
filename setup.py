@@ -1,13 +1,13 @@
 import io
 from setuptools import setup
-from blackfire_conprof import VERSION
 
 HOMEPAGE = "https://blackfire.io"
 NAME = "blackfire_conprof"
 
+exec(open('blackfire_conprof/version.py').read())
 setup(
     name=NAME,
-    version=VERSION,
+    version=__version__,
     license='MIT',
     author="Blackfire.io",
     py_modules=['blackfire_conprof'],

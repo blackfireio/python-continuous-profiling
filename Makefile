@@ -17,6 +17,10 @@ test: install
 	python -m unittest discover -vf
 .PHONY: test
 
+print-version:
+	@python -c "exec(open('blackfire_conprof/version.py').read()); print(__version__)"
+.PHONY: print-version
+
 doc-lint: ## Verify markdown rules
 	docker run --rm -v ${PWD}:/data mivok/markdownlint src
 .PHONY: doc-lint
