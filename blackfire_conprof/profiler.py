@@ -3,7 +3,8 @@ import os
 import platform
 import collections
 from ddtrace.profiling import Profiler as DDProfiler
-from blackfire_conprof import log, VERSION
+from blackfire_conprof import log
+from .version import __version__
 
 _DEFAULT_PERIOD = 45 # secs
 _DEFAULT_UPLOAD_TIMEOUT = 10 # secs
@@ -71,7 +72,7 @@ class Profiler(object):
         # runtime, language and runtime_version are already set by DD
         labels["runtime_os"] = platform.system()
         labels["runtime_arch"] = platform.machine()
-        labels["probe_version"] = VERSION
+        labels["probe_version"] = __version__
        
         # init DD profiler config via. env vars where Profiler object does not 
         # provide a way to set them
