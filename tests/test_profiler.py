@@ -1,7 +1,7 @@
 import unittest
 import time
 import os
-from blackfire_conprof import Profiler
+from blackfire_conprof.profiler import Profiler
 
 from contextlib import contextmanager
 
@@ -71,6 +71,7 @@ class ProfilerTests(unittest.TestCase):
             prof = Profiler()
             self.assertTrue('runtime_os' in prof._profiler.tags)
             self.assertTrue('runtime_arch' in prof._profiler.tags)
+            self.assertTrue('probe_version' in prof._profiler.tags)
             self.assertTrue(prof._profiler.tags.get('project_id') == 'id-1')
 
     def test_profiler_creds(self):

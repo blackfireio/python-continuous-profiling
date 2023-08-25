@@ -1,10 +1,9 @@
 import io
 from setuptools import setup
+from blackfire_conprof import VERSION
 
 HOMEPAGE = "https://blackfire.io"
 NAME = "blackfire_conprof"
-with io.open('VERSION', encoding='UTF-8') as f:
-    VERSION = f.read()
 
 setup(
     name=NAME,
