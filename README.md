@@ -12,32 +12,9 @@ Blackfire Continuous Profiler continuously collects and uploads profiling data t
 
 TODO: After deciding the pkg name
 
-## API
-
-Here is the profiler's API:
-
-```python
-Profiler.__init___(self, application_name=None, agent_socket=None, 
-                 server_id='', server_token='', labels={})
-Profiler.start()
-Profiler.stop()
-```
-
-`start` starts the continuous profiler probe.
-It collects profiling information in the background and periodically uploads it to the Agent until `stop`` is called.
-
-An example using default configuration:
-
-```python
-from blackfire_conprof.profiler import Profiler
-
-profiler = Profiler(application_name='my-python-app')
-profiler.start()
-//...
-profiler.stop()
-```
-
 ## Example
+
+An example using the whole API interface:
 
 1. Install dependencies
 
@@ -54,7 +31,7 @@ def foo():
     import time
     time.sleep(1.0)
 
-profiler = Profiler(application_name='my-python-app')
+profiler = Profiler(application_name="my-python-app", agent_socket="tcp://127.0.0.1:8307", labels={'my-extra-label': 'data'})
 profiler.start()
 foo()
 profiler.stop()
