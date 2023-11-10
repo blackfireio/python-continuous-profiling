@@ -2,7 +2,11 @@ version: "3.5"
 
 services:
   python:
-    build: ./docker
+    build:
+      dockerfile: ./docker/Dockerfile
+      context: .
+      args:
+        PYTHON_VERSION: ${PYTHON_VERSION}
     entrypoint: /opt/docker/entrypoint.sh
     command: /true
     working_dir: /opt

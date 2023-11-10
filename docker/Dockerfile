@@ -11,5 +11,7 @@ RUN set -eux; \
 # verify that the binary works
 	gosu nobody true
 
+RUN pip install twine auditwheel
+
 # py2 might throw permission errors as it by default uses /.cache folder
 ENV PYTHON_EGG_CACHE=/opt/python-eggs
