@@ -5,6 +5,8 @@ set -eu
 # This flag toggles the release destination to testing.pypi.org if set to true
 DEPLOY_TESTPYPI=false
 
+packagecloud_package_name=python-conprof
+
 # yank all internal versions from packageloud.io/testing
 if [[ ${BUILDKITE_TAG:-""} != "" ]]; then
     packagecloud_repo='stable'
@@ -21,6 +23,8 @@ fi
 
 function release()
 {
+    wheel_path="$1"
+
     if [[ ${BUILDKITE_TAG:-""} != "" ]]; then
         export TWINE_PASSWORD="`cat /etc/secret/pypi-token.password`"
         if [ "$DEPLOY_TESTPYPI" = true ] ; then
@@ -28,9 +32,9 @@ function release()
             export TWINE_PASSWORD="`cat /etc/secret/pypi-test-token.password`"
         fi
 
-        twine upload $1/*.whl --verbose
+        twine upload $wheel_path/*.whl --verbose
     else
-        package_cloud push blackfire-io/${packagecloud_repo}/python $1/*.whl
+        package_cloud push blackfire-io/${packagecloud_repo}/${packagecloud_package_name} $wheel_path/*.whl
     fi
 }
 
@@ -40,6 +44,6 @@ function yank_all()
     for package in ${packages}
     do
         echo "Yanking \"${package}\""
-        package_cloud yank blackfire-io/${packagecloud_repo}/python ${package} || true
+        package_cloud yank blackfire-io/${packagecloud_repo}/${packagecloud_package_name} ${package} || true
     done
 }

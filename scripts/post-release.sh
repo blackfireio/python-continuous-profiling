@@ -34,7 +34,7 @@ chmod a+x mark-prs.sh
 export RELEASE_REV_OLD="$previous_tag"
 export RELEASE_CHANNEL="$channel"
 export RELEASE_API_PASSWORD="${CHATBOT_PASSWORD}"
-export RELEASE_COMPONENT="python"
+export RELEASE_COMPONENT="python-conprof"
 
 ./mark-prs.sh
 
