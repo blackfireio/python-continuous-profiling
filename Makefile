@@ -1,9 +1,7 @@
 SHELL=/bin/bash -euo pipefail
 .DEFAULT_GOAL := help
 
-##
-### Tests
-##
+WHEEL_DIR ?= wheel_dist
 
 clean:
 	rm -Rf build/ && rm -Rf dist/ && cd src/ && find . -name '*.pyc' -delete
@@ -16,6 +14,11 @@ install:
 test: install
 	python -m unittest discover -vf
 .PHONY: test
+
+wheel:
+	pip wheel --verbose --no-deps --wheel-dir=$(WHEEL_DIR) .
+.PHONY: wheel
+
 
 print-version:
 	@python -c "exec(open('blackfire_conprof/version.py').read()); print(__version__)"
