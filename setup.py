@@ -10,7 +10,7 @@ setup(
     version=__version__,
     license='MIT',
     author="Blackfire.io",
-    py_modules=['blackfire_conprof'],
+    packages=['blackfire_conprof'],
     author_email="support@blackfire.io",
     install_requires=["ddtrace==1.13.3"],
     description="Blackfire Continuous Profiler",
