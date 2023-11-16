@@ -7,7 +7,7 @@ clean: ## cleans the build artifacts
 	rm -Rf build/ dist/ *.egg-info $(WHEEL_DIR)
 .PHONY: clean
 
-install:
+install: ## install dependencies
 	pip install .
 .PHONY: install
 
