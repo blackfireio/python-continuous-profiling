@@ -50,6 +50,10 @@ endif
 	./scripts/release.sh $(WHEEL_DIR)
 .PHONY: release
 
+print_wheel:
+	@echo $(WHEEL_DIR)
+.PHONY: print_wheel
+
 ##
 ### Misc
 ##
