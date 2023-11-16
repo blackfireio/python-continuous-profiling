@@ -3,7 +3,7 @@ SHELL=/bin/bash -euo pipefail
 
 WHEEL_DIR ?= wheel_dist
 
-clean:
+clean: ## cleans the build artifacts
 	rm -Rf build/ dist/ *.egg-info $(WHEEL_DIR)
 .PHONY: clean
 
