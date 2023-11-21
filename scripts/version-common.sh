@@ -2,7 +2,9 @@
 
 set -eu
 
-VERSION=$(git describe --tags | cut -d '+' -f1)
+git fetch --tags --force
+
+VERSION=$(git describe --tags --abbrev=0 | cut -d '+' -f1)
 REV_COUNT=""
 INTERNAL_VERSION=""
 
