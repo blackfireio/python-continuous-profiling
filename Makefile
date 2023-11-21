@@ -12,11 +12,8 @@ install: ## install dependencies
 	pip install .
 .PHONY: install
 
-# test: install
-# 	python -m unittest discover -vf
-# .PHONY: test
-
-test: update-version wheel wheel-check
+test: install
+	python -m unittest discover -vf
 .PHONY: test
 
 update-version:
