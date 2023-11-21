@@ -4,7 +4,7 @@ set -eu
 
 git fetch --tags --force
 
-PREV_TAG=`git describe --tags --abbrev=0`
+VERSION=$(git describe --tags | cut -d '+' -f1)
 REV_COUNT=""
 INTERNAL_VERSION=""
 
@@ -13,7 +13,7 @@ if [[ ${BUILDKITE_TAG:-""} != "" ]]; then
     VERSION="$BUILDKITE_TAG"
 # when executing this script on the master branch, we are releasing internal versions
 elif [[ ${BUILDKITE_BRANCH:-} == "master" || ${APPVEYOR_REPO_BRANCH:-} == "master" ]]; then
-    INTERNAL_VERSION="${VERSION}+internal"
+    INTERNAL_VERSION="${PREV_TAG}+internal"
 
     # append short sha to avoid collisions with previous releases
     REV_COUNT=$(git rev-parse --short HEAD)
