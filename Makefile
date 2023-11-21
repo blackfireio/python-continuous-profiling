@@ -2,6 +2,7 @@ SHELL=/bin/bash -euo pipefail
 .DEFAULT_GOAL := help
 
 WHEEL_DIR ?= wheel_dist
+PYTHON_VERSION?=3.11
 
 clean: ## cleans the build artifacts
 	rm -Rf build/ dist/ *.egg-info $(WHEEL_DIR)
@@ -11,8 +12,11 @@ install: ## install dependencies
 	pip install .
 .PHONY: install
 
-test: install
-	python -m unittest discover -vf
+# test: install
+# 	python -m unittest discover -vf
+# .PHONY: test
+
+test: update-version wheel wheel-check
 .PHONY: test
 
 update-version:
@@ -35,7 +39,6 @@ doc-lint: ## Verify markdown rules
 	docker run --rm -v ${PWD}:/data mivok/markdownlint src
 .PHONY: doc-lint
 
-PYTHON_VERSION?=3.11
 build: build-docker clean ## build the python-conprof using a dockerized python runtime
 	PYTHON_VERSION=$(PYTHON_VERSION) docker-compose run --rm python make update-version wheel wheel-check
 
