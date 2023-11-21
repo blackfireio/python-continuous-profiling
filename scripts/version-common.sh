@@ -4,7 +4,7 @@ set -eu
 
 git fetch --tags --force
 
-VERSION=$(git describe --tags --abbrev=0 | cut -d '+' -f1)
+PREV_TAG=`git describe --tags --abbrev=0`
 REV_COUNT=""
 INTERNAL_VERSION=""
 
