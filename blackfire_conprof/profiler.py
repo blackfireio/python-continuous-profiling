@@ -2,9 +2,11 @@ import re
 import os
 import platform
 import collections
-from ddtrace.profiling import Profiler as DDProfiler
 from blackfire_conprof import log
 from .version import __version__
+
+from ddtrace.profiling import Profiler as DDProfiler
+log.bridge_ddtrace_logging()
 
 _DEFAULT_PERIOD = 45 # secs
 _DEFAULT_UPLOAD_TIMEOUT = 10 # secs

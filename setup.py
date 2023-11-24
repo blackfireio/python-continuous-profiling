@@ -1,4 +1,3 @@
-import io
 from setuptools import setup
 
 HOMEPAGE = "https://blackfire.io"
