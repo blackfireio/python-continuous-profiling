@@ -10,7 +10,9 @@ Blackfire Continuous Profiler continuously collects and uploads profiling data t
 
 ## Installation
 
-TODO: After deciding the pkg name
+```shell
+pip install blackfire_conprof
+```
 
 ## Example
 
@@ -19,7 +21,7 @@ An example using the whole API interface:
 1. Install dependencies
 
 ```shell
-pip install XXX
+pip install blackfire_conprof
 ```
 
 2. Create `example.py` with the following code
