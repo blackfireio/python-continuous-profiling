@@ -4,7 +4,7 @@ from setuptools import setup
 HOMEPAGE = "https://blackfire.io"
 NAME = "blackfire_conprof"
 
-with io.open('README.md'), encoding='UTF-8') as f:
+with io.open('README.md', encoding='UTF-8') as f:
     long_description = f.read()
 
 exec(open('blackfire_conprof/version.py').read())
