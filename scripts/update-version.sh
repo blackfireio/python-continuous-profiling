@@ -10,8 +10,8 @@ VERSION=""
 # when executing this script with a git tag defined by buildkite, we are releasing to production
 if [[ ${BUILDKITE_TAG:-""} != "" ]]; then
     VERSION="$BUILDKITE_TAG"
-# when executing this script on the master branch, we are releasing internal versions
-elif [[ ${BUILDKITE_BRANCH:-} == "master" ]]; then
+# when executing this script on the master/staging branch, we are releasing internal versions
+elif [[ ${BUILDKITE_BRANCH:-} == "master" || ${BUILDKITE_BRANCH:-} == "staging" ]]; then
     VERSION=${PREV_TAG}
 
      # if there are multiple revisions, append that revision number
