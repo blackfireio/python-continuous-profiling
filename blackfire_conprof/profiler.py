@@ -80,6 +80,7 @@ class Profiler(object):
         # provide a way to set them
         os.environ["DD_PROFILING_UPLOAD_INTERVAL"] = str(period)
         os.environ["DD_PROFILING_API_TIMEOUT"] = str(upload_timeout)
+        os.environ["DD_INSTRUMENTATION_TELEMETRY_ENABLED"] = False
 
         api_key = ''
         if server_id and server_token:
@@ -93,9 +94,6 @@ class Profiler(object):
             url=agent_socket,
             api_key=api_key,
         )
-
-        del os.environ["DD_PROFILING_UPLOAD_INTERVAL"]
-        del os.environ["DD_PROFILING_API_TIMEOUT"]
 
     def start(self, *args, **kwargs):
         self._profiler.start(*args, **kwargs)
