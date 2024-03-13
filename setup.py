@@ -19,6 +19,11 @@ setup(
     description="Blackfire Continuous Profiler",
     long_description=long_description,
     long_description_content_type="text/markdown",
+    entry_points={
+        "console_scripts": [
+            "blackfire-python = blackfire:bootstrap_python",
+        ]
+    },
     url=HOMEPAGE,
     classifiers=[
         "Programming Language :: Python",
