@@ -3,8 +3,7 @@
 set -eux
 
 git fetch --tags --force
-
-PREV_TAG=`git describe --tags --abbrev=0`
+PREV_TAG=`git describe --tags --abbrev=0 remotes/origin/prod`
 VERSION=""
 
 # when executing this script with a git tag defined by buildkite, we are releasing to production
