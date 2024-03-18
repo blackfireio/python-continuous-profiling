@@ -13,7 +13,7 @@ setup(
     version=__version__,
     license='MIT',
     author="Blackfire.io",
-    packages=['blackfire_conprof'],
+    packages=['blackfire_conprof', 'blackfire_conprof.bootstrap'],
     author_email="support@blackfire.io",
     install_requires=["ddtrace==1.13.3"],
     description="Blackfire Continuous Profiler",
@@ -21,7 +21,7 @@ setup(
     long_description_content_type="text/markdown",
     entry_points={
         "console_scripts": [
-            "blackfire-python = blackfire:bootstrap_python",
+            "blackfire-run = blackfire_conprof:bootstrap_python",
         ]
     },
     url=HOMEPAGE,
