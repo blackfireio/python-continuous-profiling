@@ -5,17 +5,13 @@ from .version import __version__
 logger = log.get_logger(__name__)
 
 def _print_help():
-    help_string = '''Usage: blackfire-run <program>
-       Enable code instrumentation, run a python program, and starts continuous profiling.
+    help_string = '''Usage: blackfire-conprof <application>
+       Runs the application with the Blackfire Continuous Profiler enabled.
 '''
     print(help_string)
 
 
 def _add_bootstrap_to_pythonpath(bootstrap_dir):
-    """
-    Add our bootstrap directory to the head of $PYTHONPATH to ensure
-    it is loaded before program code
-    """
     python_path = os.environ.get('PYTHONPATH', '')
 
     if python_path:
