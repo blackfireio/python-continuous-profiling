@@ -25,11 +25,6 @@ if bootstrap_dir in sys.path:
         # reinsert the bootstrap_dir again
         sys.path.insert(index, bootstrap_dir)
 
-
-
-# enable code auto-instrumentation
-import blackfire_conprof.auto
-
 # enable the profiler
 try:
     from blackfire_conprof.profiler import Profiler
