@@ -1,5 +1,10 @@
 import re
 import os
+
+# DD profiler requires this for patching the runtime. Example: for gevent to work
+# correctly, this needs to be imported before gevent.patch_all()
+import ddtrace.auto
+
 import platform
 import collections
 from blackfire_conprof import log
