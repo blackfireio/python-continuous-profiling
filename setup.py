@@ -21,7 +21,7 @@ setup(
     long_description_content_type="text/markdown",
     entry_points={
         "console_scripts": [
-            "blackfire-run = blackfire_conprof:bootstrap_python",
+            "blackfire-conprof = blackfire_conprof:bootstrap_python",
         ]
     },
     url=HOMEPAGE,
