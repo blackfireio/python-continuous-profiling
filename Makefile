@@ -4,6 +4,8 @@ SHELL=/bin/bash -euo pipefail
 WHEEL_DIR ?= wheel_dist
 PYTHON_VERSION?=3.11
 
+COMPOSE=docker compose
+
 clean: ## cleans the build artifacts
 	rm -Rf build/ dist/ *.egg-info $(WHEEL_DIR)
 .PHONY: clean
@@ -37,10 +39,10 @@ doc-lint: ## Verify markdown rules
 .PHONY: doc-lint
 
 build: build-docker clean ## build the python-conprof using a dockerized python runtime
-	PYTHON_VERSION=$(PYTHON_VERSION) docker-compose run --rm python make update-version wheel wheel-check
+	PYTHON_VERSION=$(PYTHON_VERSION) $(COMPOSE) run --rm python make update-version wheel wheel-check
 
 build-docker:
-	PYTHON_VERSION=$(PYTHON_VERSION) docker-compose build python
+	PYTHON_VERSION=$(PYTHON_VERSION) $(COMPOSE) build python
 .PHONY: build-docker
 
 release: ## release the python conprof
