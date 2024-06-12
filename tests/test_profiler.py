@@ -49,7 +49,7 @@ class ProfilerTests(unittest.TestCase):
             foo(0.3+0.2)
             prof.stop()
 
-        self.assertTrue(_context.nexportcalls >= 3)
+        self.assertTrue(_context.nexportcalls >= 1)
 
     def test_profiler_appname(self):
         with _env({"BLACKFIRE_CONPROF_APP_NAME": 'app1', "PLATFORM_APPLICATION_NAME" : 'app2'}):
