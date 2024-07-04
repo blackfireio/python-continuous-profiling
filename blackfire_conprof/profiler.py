@@ -98,6 +98,7 @@ class Profiler(object):
             tags=labels,
             url=agent_socket,
             api_key=api_key,
+            enable_code_provenance=False,
         )
 
     def start(self, *args, **kwargs):
