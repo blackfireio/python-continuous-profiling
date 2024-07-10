@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+* v1.2.0 (2024-07-05)
+
+  - Disable `code_provenance`
+
 * v1.1.1 (2024-06-20)
 
   - Fix installation on Python 3.12
