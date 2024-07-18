@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+* v1.2.1 (2024-07-18)
+
+  - Fix: Disable `code_provenance`
+
 * v1.2.0 (2024-07-05)
 
   - Disable `code_provenance`
