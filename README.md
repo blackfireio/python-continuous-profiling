@@ -63,8 +63,14 @@ profiler = Profiler()
 profiler.start()
 ```
 
-Please note that the above needs to be done as early as possible in your application. Example: for gevent applications to work
-correctly, this needs to be imported before `gevent.monkey.patch_all()`.
+If you are working with gevent or any other library that uses pseudo-threads, and you also need to call
+
+```
+import blackfire_conprof.auto
+```
+
+as early as possible in your application. Example: for gevent applications to work correctly, this needs 
+to be imported before `gevent.monkey.patch_all()`.
 
 ## Command line
 
