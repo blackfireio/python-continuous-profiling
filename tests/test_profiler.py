@@ -25,12 +25,10 @@ def _env(env_var_pairs):
         os.environ.clear()
         os.environ.update(orig_env)
 
-
 class ProfilerTests(unittest.TestCase):
     def test_profiler_dd_envvars(self):
         with _env({"DD_PROFILING_ENABLED": '1'}):
-            import blackfire_conprof.profiler as p
-            p._auto_patch()
+            import blackfire_conprof.auto
 
             # ensure os.environ is preserved
             self.assertEqual(os.environ['DD_PROFILING_ENABLED'], '1')
