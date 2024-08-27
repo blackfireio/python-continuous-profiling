@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+* v1.2.2 (2024-08-27)
+
+  - [Python] Fix auto patching side effects
+
 * v1.2.1 (2024-07-18)
 
   - Fix: Disable `code_provenance`
