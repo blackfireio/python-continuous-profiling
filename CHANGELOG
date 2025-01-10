@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+* v1.2.3 (2024-11-25)
+
+  - Add support to python 3.13
+
 * v1.2.2 (2024-08-27)
 
   - [Python] Fix auto patching side effects
