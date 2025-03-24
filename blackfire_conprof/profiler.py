@@ -5,13 +5,8 @@ import collections
 from blackfire_conprof import log
 from .version import __version__
 
-from ddtrace.profiling import Profiler as DDProfiler
-log.bridge_ddtrace_logging()
-
 _DEFAULT_PERIOD = 45 # secs
 _DEFAULT_UPLOAD_TIMEOUT = 10 # secs
-
-logger = log.get_logger(__name__)
 
 def _get_default_agent_socket():
     plat = platform.system()
@@ -81,6 +76,7 @@ class Profiler(object):
         os.environ["DD_PROFILING_UPLOAD_INTERVAL"] = str(period)
         os.environ["DD_PROFILING_API_TIMEOUT"] = str(upload_timeout)
         os.environ["DD_INSTRUMENTATION_TELEMETRY_ENABLED"] = "False"
+        os.environ["DD_TRACE_AGENT_URL"] = agent_socket
 
         api_key = ''
         if server_id and server_token:
@@ -88,20 +84,25 @@ class Profiler(object):
 
         # if application_name(service) is still None here, DD fills with the 
         # current running module name
+        from ddtrace.profiling import Profiler as DDProfiler
         self._profiler = DDProfiler(
             service=application_name,
             tags=labels,
-            url=agent_socket,
             api_key=api_key,
             enable_code_provenance=False,
         )
 
+        # needs to be done after DDProfiler import
+        log.bridge_ddtrace_logging()
+
+        self.logger = log.get_logger(__name__)
+
     def start(self, *args, **kwargs):
         self._profiler.start(*args, **kwargs)
 
-        logger.info("Started profiling")
+        self.logger.info("Started profiling")
 
     def stop(self):
         self._profiler.stop()
 
-        logger.info("Profiling stopped")
+        self.logger.info("Profiling stopped")
