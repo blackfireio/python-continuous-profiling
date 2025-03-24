@@ -15,7 +15,7 @@ setup(
     author="Blackfire.io",
     packages=['blackfire_conprof', 'blackfire_conprof.bootstrap'],
     author_email="support@blackfire.io",
-    install_requires=["ddtrace==2.9.1"],
+    install_requires=["ddtrace==3.2.1"],
     description="Blackfire Continuous Profiler",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -27,7 +27,6 @@ setup(
     url=HOMEPAGE,
     classifiers=[
         "Programming Language :: Python",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
