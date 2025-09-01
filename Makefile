@@ -5,17 +5,14 @@ WHEEL_DIR ?= wheel_dist
 PYTHON_VERSION?=3.13
 
 COMPOSE=docker compose
+ON_PYTHON=$(COMPOSE) run --rm --build python
 
 clean: ## cleans the build artifacts
 	rm -Rf build/ dist/ *.egg-info $(WHEEL_DIR)
 .PHONY: clean
 
-install: ## install dependencies
-	pip install .
-.PHONY: install
-
-test: install
-	python -m unittest discover -vf
+test:
+	$(ON_PYTHON) ./scripts/test.sh
 .PHONY: test
 
 update-version:
