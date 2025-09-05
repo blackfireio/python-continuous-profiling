@@ -1,0 +1,24 @@
+name: release staging
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  gen-binary:
+    name: Gen Binary - Linux - AMD64
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+
+      - run: |
+          make build
+
+      - name: upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel_dist
+          path: |
+            wheel_dist/*
