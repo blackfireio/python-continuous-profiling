@@ -56,6 +56,6 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v5
       - run: |
-          ./scripts/release.sh wheel_dist
+          ./scripts/releasing/release.sh wheel_dist
         env:
             TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
