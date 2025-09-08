@@ -44,8 +44,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: wheel_dist
-          path: |
-            wheel_dist/*
+          path: ./wheel_dist
+
   release:
     name: Release
     runs-on: ubuntu-latest
@@ -54,6 +54,8 @@ jobs:
       - uses: actions/checkout@v5
       - name: Download build artifacts
         uses: actions/download-artifact@v5
+        with:
+          name: wheel_dist
       - run: |
           sudo pip install twine
           ./scripts/releasing/release.sh wheel_dist
