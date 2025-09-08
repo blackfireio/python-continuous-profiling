@@ -57,6 +57,8 @@ jobs:
         with:
           name: wheel_dist
       - run: |
+          mkdir -p wheel_dist
+          mv *.whl wheel_dist
           sudo pip install twine
           ./scripts/releasing/release.sh wheel_dist
         env:
