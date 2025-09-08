@@ -56,6 +56,9 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v5
       - run: |
+          sudo pip install twine
           ./scripts/releasing/release.sh wheel_dist
         env:
-            TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+          TWINE_NON_INTERACTIVE: 1
+          TWINE_USERNAME: __token__
