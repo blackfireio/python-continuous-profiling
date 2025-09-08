@@ -8,7 +8,7 @@ VERSION=""
 
 echo "Previous tag is ${PREV_TAG}"
 
-if [[ ${RELEASE_VERSION:-""} != ""]]; then
+if [[ ${RELEASE_VERSION:-""} != "" ]]; then
     if [[ ${RELEASE_VERSION} == "master" ]]; then
         VERSION=${PREV_TAG}
 
