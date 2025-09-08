@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+* v1.2.5 (2025-09-08)
+
+  - Internal releasing changes
+
 * v1.2.4 (2025-03-28)
 
   - Upgrade to `ddtrace 3.2.1` for Python 3.13
