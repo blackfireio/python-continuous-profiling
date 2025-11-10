@@ -2,7 +2,7 @@ SHELL=/bin/bash -euo pipefail
 .DEFAULT_GOAL := help
 
 WHEEL_DIR ?= wheel_dist
-PYTHON_VERSION?=3.13
+PYTHON_VERSION?=3.14
 
 COMPOSE=docker compose
 ON_PYTHON=$(COMPOSE) run --rm --build python
