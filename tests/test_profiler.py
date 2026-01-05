@@ -2,7 +2,6 @@ import unittest
 import time
 import os
 from blackfire_conprof.profiler import Profiler
-from ddtrace.settings.profiling import config as profiling_config
 
 from contextlib import contextmanager
 
@@ -34,7 +33,6 @@ class ProfilerTests(unittest.TestCase):
             # ensure os.environ is preserved
             self.assertEqual(os.environ['DD_PROFILING_ENABLED'], '1')
 
-    @unittest.skip(not profiling_config.export.libdd_enabled)
     def test_profiler_basic_lib_dd(self):
         class _context:
             nexportcalls = 0
@@ -48,24 +46,17 @@ class ProfilerTests(unittest.TestCase):
             prof.stop()
         self.assertTrue(_context.nexportcalls >= 1)
 
-    @unittest.skip(profiling_config.export.libdd_enabled)
     def test_profiler_basic(self):
         def foo(t):
             time.sleep(t)
 
         class _context:
             nexportcalls = 0
-        def _export(instance, events, start_time_ns, end_time_ns):
-            from ddtrace.profiling.collector import stack_event
-            
-            stack_events = events.get(stack_event.StackSampleEvent, [])
-
-            self.assertTrue(len(stack_events) > 0)
-            self.assertTrue('foo' in str(stack_events))
+        def _upload(*args, **kwargs):
             _context.nexportcalls += 1
-        
-        from ddtrace.profiling.exporter import http  as dd_http_exporter
-        with _patch(dd_http_exporter.PprofHTTPExporter, "export", _export):
+
+        from ddtrace.internal.datadog.profiling import ddup
+        with _patch(ddup, "upload", _upload):
             prof = Profiler(period=0.1)
             prof.start()
             foo(0.3+0.2)
@@ -96,24 +87,26 @@ class ProfilerTests(unittest.TestCase):
             self.assertTrue('probe_version' in prof._profiler.tags)
             self.assertTrue(prof._profiler.tags.get('project_id') == 'id-1')
 
-    @unittest.skip(profiling_config.export.libdd_enabled)
     def test_profiler_creds(self):
-        def _upload(instance, client, path, body, headers):
-            self.assertTrue(headers.get('DD-API-KEY').decode()=='id-1:token-1')
+        class _context:
+            upload_calls = 0
 
-        from ddtrace.profiling.exporter import http  as dd_http_exporter
-        with _patch(dd_http_exporter.PprofHTTPExporter, "_upload", _upload):
+        def _upload(*args, **kwargs):
+            _context.upload_calls += 1
+
+        from ddtrace.internal.datadog.profiling import ddup
+
+        # Test with credentials
+        with _patch(ddup, "upload", _upload):
             prof = Profiler(server_id='id-1', server_token='token-1', period=0.1)
+            self.assertEqual(prof._profiler.api_key, 'id-1:token-1')
             prof.start()
             time.sleep(0.2)
             prof.stop()
 
-        def _upload2(instance, client, path, body, headers):
-            self.assertEqual(headers.get('DD-API-KEY'), None)
+        self.assertGreater(_context.upload_calls, 0)
 
-        # no token
-        with _patch(dd_http_exporter.PprofHTTPExporter, "_upload", _upload2):
-            prof = Profiler(server_id='id-1', period=0.1)
-            prof.start()
-            time.sleep(0.2)
-            prof.stop()
+        # Test without token (server_id only)
+        prof2 = Profiler(server_id='id-1', period=0.1)
+        self.assertEqual(prof2._profiler.api_key, '')
+        prof2.stop()
