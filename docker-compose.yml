@@ -10,12 +10,6 @@ services:
     working_dir: /opt
     environment:
       XDG_CACHE_HOME: /tmp
-      BUILDKITE_AGENT_ACCESS_TOKEN: ~
-      BUILDKITE_BRANCH: ~
-      BUILDKITE_TAG: ~
-      BUILDKITE_BUILD_ID: ~
-      BUILDKITE_BUILD_NUMBER: ~
-      BUILDKITE_JOB_ID: ~
       RELEASE_VERSION: ~
       RELEASE_CHANNEL: ~
       GO111MODULE: ~
