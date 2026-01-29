@@ -43,9 +43,6 @@ build-docker:
 .PHONY: build-docker
 
 release: ## release the python conprof
-ifdef CI
-	buildkite-agent artifact download '$(WHEEL_DIR)/*' .
-endif
 	./scripts/release.sh $(WHEEL_DIR)
 .PHONY: release
 
