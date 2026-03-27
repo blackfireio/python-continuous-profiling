@@ -15,7 +15,7 @@ setup(
     author="Blackfire.io",
     packages=['blackfire_conprof', 'blackfire_conprof.bootstrap'],
     author_email="support@blackfire.io",
-    install_requires=["ddtrace==4.1.1"],
+    install_requires=["ddtrace==4.6.4"],
     description="Blackfire Continuous Profiler",
     long_description=long_description,
     long_description_content_type="text/markdown",
