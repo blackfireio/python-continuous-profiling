@@ -59,7 +59,7 @@ jobs:
       - run: |
           mkdir -p wheel_dist
           mv *.whl wheel_dist
-          sudo pip install twine
+          pipx install twine
           ./scripts/releasing/release.sh wheel_dist
         env:
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
