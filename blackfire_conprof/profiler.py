@@ -29,6 +29,14 @@ def parse_network_address_string(agent_socket):
     network, address = matches[0]
     return network, address
 
+def _is_running(dd_profiler):
+    # relies on ddtrace internals: assume running if they change
+    try:
+        from ddtrace.internal.service import ServiceStatus
+        return dd_profiler.status == ServiceStatus.RUNNING
+    except Exception:
+        return True
+
 _CustomLabel = collections.namedtuple("_CustomLabel", ["name", "env_var"])
 _blackfire_labels = [
     _CustomLabel(name="project_id", env_var="PLATFORM_PROJECT"),
@@ -99,6 +107,17 @@ class Profiler(object):
 
     def start(self, *args, **kwargs):
         self._profiler.start(*args, **kwargs)
+
+        if not _is_running(self._profiler):
+            # Same guard as ddtrace's Profiler.start(), which keeps a single
+            # active profiler per process and returns silently otherwise
+            active = getattr(type(self._profiler), "_active_instance", None)
+            if active is not None and active is not self._profiler and _is_running(active):
+                self.logger.error("Profiling not started: another ddtrace profiler is already running in this process")
+            else:
+                # e.g. a uWSGI master process, where ddtrace starts profiling in each worker
+                self.logger.info("Profiling not started in this process, see ddtrace logs")
+            return
 
         self.logger.info("Started profiling")
 

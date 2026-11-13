@@ -64,6 +64,68 @@ class ProfilerTests(unittest.TestCase):
 
         self.assertTrue(_context.nexportcalls >= 1)
 
+    def test_profiler_not_started_when_dd_profiler_running(self):
+        from ddtrace.profiling import Profiler as DDProfiler
+
+        dd_prof = DDProfiler()
+        dd_prof.start()
+        try:
+            prof = Profiler(period=0.1)
+            with self.assertLogs('blackfire_conprof.profiler', level='INFO') as logs:
+                prof.start()
+            self.assertEqual(len(logs.records), 1)
+            self.assertEqual(logs.records[0].levelname, 'ERROR')
+            self.assertIn('another ddtrace profiler is already running', logs.records[0].getMessage())
+        finally:
+            dd_prof.stop(flush=False)
+
+    def test_profiler_not_started_in_uwsgi_master(self):
+        from ddtrace.internal import uwsgi
+
+        def _check_uwsgi(*args, **kwargs):
+            raise uwsgi.uWSGIMasterProcess()
+
+        prof = Profiler(period=0.1)
+        with _patch(uwsgi, "check_uwsgi", _check_uwsgi):
+            with self.assertLogs('blackfire_conprof.profiler', level='INFO') as logs:
+                prof.start()
+        self.assertEqual(len(logs.records), 1)
+        self.assertEqual(logs.records[0].levelname, 'INFO')
+        self.assertIn('Profiling not started in this process', logs.records[0].getMessage())
+
+    def _assert_start_logs(self, prof, levelname, message):
+        with self.assertLogs('blackfire_conprof.profiler', level='INFO') as logs:
+            prof.start()
+        self.assertEqual([r.levelname for r in logs.records], [levelname])
+        self.assertIn(message, logs.records[0].getMessage())
+
+    def test_profiler_not_started_with_deprecated_uwsgi_config(self):
+        from ddtrace.internal import uwsgi
+
+        def _check_uwsgi(*args, **kwargs):
+            raise uwsgi.uWSGIConfigDeprecationWarning()
+
+        with _patch(uwsgi, "check_uwsgi", _check_uwsgi):
+            self._assert_start_logs(Profiler(period=0.1), 'INFO', 'Profiling not started in this process')
+
+    def test_profiler_not_started_with_stale_active_instance(self):
+        from ddtrace.internal import uwsgi
+        from ddtrace.profiling import Profiler as DDProfiler
+
+        def _check_uwsgi(*args, **kwargs):
+            raise uwsgi.uWSGIMasterProcess()
+
+        # a stopped profiler still registered as the active one
+        with _patch(DDProfiler, "_active_instance", DDProfiler()):
+            with _patch(uwsgi, "check_uwsgi", _check_uwsgi):
+                self._assert_start_logs(Profiler(period=0.1), 'INFO', 'Profiling not started in this process')
+
+    def test_is_running_without_ddtrace_internals(self):
+        from blackfire_conprof.profiler import _is_running
+
+        # an object without ddtrace's status attribute is assumed running
+        self.assertTrue(_is_running(object()))
+
     def test_profiler_appname(self):
         with _env({"BLACKFIRE_CONPROF_APP_NAME": 'app1', "PLATFORM_APPLICATION_NAME" : 'app2'}):
             prof = Profiler(application_name='app3')
