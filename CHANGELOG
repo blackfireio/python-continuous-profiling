@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+* v1.2.12 (2026-11-13)
+
+  - Update ddtrace to 4.17.0
+  - Support Python 3.15
+
 * v1.2.11 (2026-10-21)
 
   - Internal releasing changes
